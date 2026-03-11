@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import boubouImg from "@/assets/boubou-chic.jpg";
 
 type Product = {
   name: string;
@@ -22,7 +24,7 @@ const products: Product[] = [
   { name: "Blazer Femme Camel", price: 38000, category: "Femme", image: "https://images.unsplash.com/photo-1591369822096-ffd140ec948f?w=800&q=85&fit=crop", rating: 4.6 },
   { name: "Jean Slim Homme", price: 19000, category: "Homme", image: "https://images.unsplash.com/photo-1542272604-787c3835535d?w=800&q=85&fit=crop", rating: 4.3 },
   { name: "Robe Wax Moderne", price: 27000, oldPrice: 35000, category: "Femme", image: "https://images.unsplash.com/photo-1590735213408-9e8f4889ce28?w=800&q=85&fit=crop", rating: 4.7, promo: true },
-  { name: "Ensemble Boubou Chic", price: 45000, category: "Homme", image: "https://images.unsplash.com/photo-1516826957135-700dedea698c?w=800&q=85&fit=crop", rating: 4.8 },
+  { name: "Ensemble Boubou Chic", price: 45000, category: "Homme", image: boubouImg, rating: 4.8 },
 ];
 
 const filters = ["Tout", "Femme", "Homme", "Accessoires"] as const;
@@ -67,15 +69,31 @@ function Countdown() {
   );
 }
 
+const cardVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.08, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number] },
+  }),
+  exit: { opacity: 0, scale: 0.95, transition: { duration: 0.25 } },
+};
+
 const Catalogue = () => {
   const [active, setActive] = useState<string>("Tout");
   const filtered = active === "Tout" ? products : products.filter((p) => p.category === active);
 
   return (
-    <section id="catalogue" className="py-16 md:py-24 bg-roy-light">
+    <section id="catalogue" className="py-16 md:py-24 bg-roy-light overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="reveal flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6 }}
+          className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10"
+        >
           <div>
             <span className="font-montserrat font-medium uppercase text-xs tracking-wider text-roy-accent">
               Nos Produits
@@ -99,81 +117,99 @@ const Catalogue = () => {
               </button>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-          {filtered.map((product) => {
-            const waMsg = encodeURIComponent(
-              `Bonjour Roy Store 👋 Je suis intéressé(e) par : ${product.name} — ${formatPrice(product.price)}. Est-ce disponible ?`
-            );
-            return (
-              <div key={product.name} className="reveal product-card group">
-                {/* Image */}
-                <div className="relative overflow-hidden rounded bg-roy-dominant/20 aspect-[4/5]">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="product-image w-full h-full object-cover"
-                    loading="lazy"
-                  />
-                  {product.promo && (
-                    <span className="absolute top-2 left-2 bg-roy-accent text-white font-montserrat font-semibold text-[0.6rem] px-2 py-1 rounded flex items-center gap-1">
-                      <i className="fa-solid fa-percent text-[0.55rem]" /> Promo
-                    </span>
-                  )}
-                  {/* Hover overlay */}
-                  <div className="product-overlay absolute inset-0 bg-roy-dark/30 flex items-center justify-center gap-3">
-                    <button className="w-9 h-9 bg-white rounded-full flex items-center justify-center hover:bg-roy-accent hover:text-white transition-colors text-roy-dark">
-                      <i className="fa-regular fa-heart text-[0.85rem]" />
-                    </button>
-                    <button className="w-9 h-9 bg-white rounded-full flex items-center justify-center hover:bg-roy-accent hover:text-white transition-colors text-roy-dark">
-                      <i className="fa-solid fa-arrow-up-right-and-arrow-down-left-from-center text-[0.75rem]" />
-                    </button>
-                    <button className="w-9 h-9 bg-white rounded-full flex items-center justify-center hover:bg-roy-accent hover:text-white transition-colors text-roy-dark">
-                      <i className="fa-solid fa-bag-shopping text-[0.85rem]" />
-                    </button>
-                  </div>
-                </div>
-
-                {product.promo && <Countdown />}
-
-                {/* Info */}
-                <div className="mt-3">
-                  <span className="font-montserrat font-light uppercase text-[0.6rem] tracking-wider text-muted-foreground">
-                    {product.category}
-                  </span>
-                  <h3 className="font-outfit font-medium text-sm text-roy-dark mt-0.5 leading-tight">
-                    {product.name}
-                  </h3>
-                  <div className="flex items-center gap-1 mt-1">
-                    <i className="fa-solid fa-star text-roy-accent text-[0.6rem]" />
-                    <span className="font-montserrat text-[0.65rem] text-roy-dark">{product.rating}</span>
-                  </div>
-                  <div className="flex items-center gap-2 mt-1">
-                    {product.oldPrice && (
-                      <span className="font-montserrat text-xs text-muted-foreground line-through">
-                        {formatPrice(product.oldPrice)}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={active}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6"
+          >
+            {filtered.map((product, i) => {
+              const waMsg = encodeURIComponent(
+                `Bonjour Roy Store 👋 Je suis intéressé(e) par : ${product.name} — ${formatPrice(product.price)}. Est-ce disponible ?`
+              );
+              return (
+                <motion.div
+                  key={product.name}
+                  custom={i}
+                  variants={cardVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  whileHover={{ y: -6, transition: { duration: 0.3 } }}
+                  className="product-card group"
+                >
+                  {/* Image */}
+                  <div className="relative overflow-hidden rounded bg-roy-dominant/20 aspect-[4/5]">
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="product-image w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                    {product.promo && (
+                      <span className="absolute top-2 left-2 bg-roy-accent text-white font-montserrat font-semibold text-[0.6rem] px-2 py-1 rounded flex items-center gap-1">
+                        <i className="fa-solid fa-percent text-[0.55rem]" /> Promo
                       </span>
                     )}
-                    <span className="font-montserrat font-medium text-sm text-roy-accent">
-                      {formatPrice(product.price)}
-                    </span>
+                    {/* Hover overlay */}
+                    <div className="product-overlay absolute inset-0 bg-roy-dark/30 flex items-center justify-center gap-3">
+                      <button className="w-9 h-9 bg-white rounded-full flex items-center justify-center hover:bg-roy-accent hover:text-white transition-colors text-roy-dark">
+                        <i className="fa-regular fa-heart text-[0.85rem]" />
+                      </button>
+                      <button className="w-9 h-9 bg-white rounded-full flex items-center justify-center hover:bg-roy-accent hover:text-white transition-colors text-roy-dark">
+                        <i className="fa-solid fa-arrow-up-right-and-arrow-down-left-from-center text-[0.75rem]" />
+                      </button>
+                      <button className="w-9 h-9 bg-white rounded-full flex items-center justify-center hover:bg-roy-accent hover:text-white transition-colors text-roy-dark">
+                        <i className="fa-solid fa-bag-shopping text-[0.85rem]" />
+                      </button>
+                    </div>
                   </div>
-                </div>
 
-                <a
-                  href={`https://wa.me/22946305190?text=${waMsg}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-3 w-full flex items-center justify-center gap-2 bg-roy-dark text-white font-montserrat text-xs font-medium py-2.5 rounded hover:bg-roy-accent transition-colors"
-                >
-                  <i className="fa-brands fa-whatsapp text-sm" /> Commander
-                </a>
-              </div>
-            );
-          })}
-        </div>
+                  {product.promo && <Countdown />}
+
+                  {/* Info */}
+                  <div className="mt-3 min-h-0">
+                    <span className="font-montserrat font-light uppercase text-[0.6rem] tracking-wider text-muted-foreground">
+                      {product.category}
+                    </span>
+                    <h3 className="font-outfit font-medium text-sm text-roy-dark mt-0.5 leading-tight truncate">
+                      {product.name}
+                    </h3>
+                    <div className="flex items-center gap-1 mt-1">
+                      <i className="fa-solid fa-star text-roy-accent text-[0.6rem]" />
+                      <span className="font-montserrat text-[0.65rem] text-roy-dark">{product.rating}</span>
+                    </div>
+                    <div className="flex items-center gap-2 mt-1 flex-wrap">
+                      {product.oldPrice && (
+                        <span className="font-montserrat text-xs text-muted-foreground line-through">
+                          {formatPrice(product.oldPrice)}
+                        </span>
+                      )}
+                      <span className="font-montserrat font-medium text-sm text-roy-accent">
+                        {formatPrice(product.price)}
+                      </span>
+                    </div>
+                  </div>
+
+                  <a
+                    href={`https://wa.me/22946305190?text=${waMsg}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-3 w-full flex items-center justify-center gap-2 bg-roy-dark text-white font-montserrat text-xs font-medium py-2.5 rounded hover:bg-roy-accent transition-colors"
+                  >
+                    <i className="fa-brands fa-whatsapp text-sm" /> Commander
+                  </a>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+        </AnimatePresence>
       </div>
     </section>
   );
