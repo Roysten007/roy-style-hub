@@ -1,9 +1,17 @@
+import { motion } from "framer-motion";
+
 const PromoBanner = () => (
-  <section className="bg-roy-dark">
+  <section className="bg-roy-dark overflow-hidden">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="reveal flex flex-col lg:flex-row items-center">
+      <div className="flex flex-col lg:flex-row items-center">
         {/* Text */}
-        <div className="w-full lg:w-1/2 py-12 lg:py-20 lg:pr-12">
+        <motion.div
+          initial={{ opacity: 0, x: -30 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.7 }}
+          className="w-full lg:w-1/2 py-12 lg:py-20 lg:pr-12"
+        >
           <span className="font-montserrat font-medium uppercase text-xs tracking-wider text-roy-accent">
             Offre limitée
           </span>
@@ -16,16 +24,22 @@ const PromoBanner = () => (
           >
             Profiter de l'offre →
           </a>
-        </div>
+        </motion.div>
         {/* Image */}
-        <div className="w-full lg:w-1/2 h-[300px] lg:h-[400px]">
+        <motion.div
+          initial={{ opacity: 0, x: 30 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.7, delay: 0.1 }}
+          className="w-full lg:w-1/2 h-[300px] lg:h-[400px]"
+        >
           <img
             src="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=800&q=85&fit=crop"
             alt="Promo mode Roy Store"
             className="w-full h-full object-cover"
             loading="lazy"
           />
-        </div>
+        </motion.div>
       </div>
     </div>
   </section>

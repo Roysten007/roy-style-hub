@@ -1,3 +1,5 @@
+import { motion } from "framer-motion";
+
 const categories = [
   {
     title: "Pour Elle",
@@ -23,11 +25,17 @@ const categories = [
 ];
 
 const Categories = () => (
-  <section className="py-16 md:py-24 bg-white">
+  <section className="py-16 md:py-24 bg-white overflow-hidden">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Large block */}
-        <div className="reveal group relative overflow-hidden rounded bg-roy-light h-[400px] lg:h-full lg:row-span-2 cursor-pointer">
+        <motion.div
+          initial={{ opacity: 0, x: -40 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.7 }}
+          className="group relative overflow-hidden rounded bg-roy-light h-[400px] lg:h-full lg:row-span-2 cursor-pointer"
+        >
           <img src={categories[0].image} alt={categories[0].title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
           <div className="absolute inset-0 bg-gradient-to-t from-roy-dark/70 to-transparent" />
           <div className="absolute bottom-0 left-0 p-6 md:p-8">
@@ -42,11 +50,18 @@ const Categories = () => (
               Voir tout →
             </a>
           </div>
-        </div>
+        </motion.div>
 
         {/* Two small blocks */}
-        {categories.slice(1).map((cat) => (
-          <div key={cat.title} className="reveal group relative overflow-hidden rounded bg-roy-light h-[250px] cursor-pointer">
+        {categories.slice(1).map((cat, i) => (
+          <motion.div
+            key={cat.title}
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.7, delay: i * 0.15 }}
+            className="group relative overflow-hidden rounded bg-roy-light h-[250px] cursor-pointer"
+          >
             <img src={cat.image} alt={cat.title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
             <div className="absolute inset-0 bg-gradient-to-t from-roy-dark/70 to-transparent" />
             <div className="absolute bottom-0 left-0 p-5">
@@ -61,7 +76,7 @@ const Categories = () => (
                 Voir tout →
               </a>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
     </div>

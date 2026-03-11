@@ -1,3 +1,5 @@
+import { motion } from "framer-motion";
+
 const stats = [
   { value: "500+", label: "Clients satisfaits" },
   { value: "200+", label: "Références" },
@@ -5,23 +7,34 @@ const stats = [
 ];
 
 const About = () => (
-  <section id="apropos" className="py-16 md:py-24 bg-white">
+  <section id="apropos" className="py-16 md:py-24 bg-white overflow-hidden">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="reveal flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+      <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
         {/* Image */}
-        <div className="w-full lg:w-1/2 relative">
+        <motion.div
+          initial={{ opacity: 0, x: -40 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.7 }}
+          className="w-full lg:w-1/2 relative"
+        >
           <img
             src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=800&q=85&fit=crop"
             alt="Boutique Roy Store"
             className="w-full h-[350px] md:h-[450px] object-cover rounded"
             loading="lazy"
           />
-          {/* Decorative border */}
           <div className="hidden md:block absolute -bottom-4 -right-4 w-full h-full border-2 border-roy-accent rounded -z-10" />
-        </div>
+        </motion.div>
 
         {/* Text */}
-        <div className="w-full lg:w-1/2">
+        <motion.div
+          initial={{ opacity: 0, x: 40 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.7, delay: 0.15 }}
+          className="w-full lg:w-1/2"
+        >
           <span className="font-montserrat font-medium uppercase text-xs tracking-wider text-roy-accent">
             Notre histoire
           </span>
@@ -40,7 +53,6 @@ const About = () => (
             </p>
           </div>
 
-          {/* Stats */}
           <div className="flex gap-8 mt-8">
             {stats.map((s) => (
               <div key={s.label}>
@@ -58,7 +70,7 @@ const About = () => (
           >
             <i className="fa-brands fa-whatsapp" /> Nous contacter
           </a>
-        </div>
+        </motion.div>
       </div>
     </div>
   </section>
