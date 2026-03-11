@@ -1,12 +1,30 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useScrollReveal } from "@/hooks/useScrollReveal";
+import Navbar from "@/components/Navbar";
+import Hero from "@/components/Hero";
+import Reassurance from "@/components/Reassurance";
+import Categories from "@/components/Categories";
+import Catalogue from "@/components/Catalogue";
+import PromoBanner from "@/components/PromoBanner";
+import Events from "@/components/Events";
+import About from "@/components/About";
+import Footer from "@/components/Footer";
+import WhatsAppButton from "@/components/WhatsAppButton";
 
 const Index = () => {
+  useScrollReveal();
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen">
+      <Navbar />
+      <Hero />
+      <Reassurance />
+      <Categories />
+      <Catalogue />
+      <PromoBanner />
+      <Events />
+      <About />
+      <Footer />
+      <WhatsAppButton />
     </div>
   );
 };
